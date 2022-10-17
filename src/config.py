@@ -9,7 +9,7 @@ def get_device():
     else:
         return "cpu"
 
-PATH_TO_DATASET = '../../protoqa-data/data/dev/dev.crowdsourced.jsonl'
+PATH_TO_DATASET = '../protoqa-data/data/dev/dev.crowdsourced.jsonl'
 PATH_TO_MODELS = 'models'
 PATH_TO_RESULTS = 'results'
 TEST_SIZE = 0.2
@@ -63,6 +63,7 @@ class Config:
         self.device = DEVICE
         self.test_size = args.test_size
         self.lr = args.learning_rate
+        self.momentum = args.momentum
         self.num_epochs = args.num_epochs
         self.batch_size = args.batch_size
         self.path_to_models = args.path_to_model

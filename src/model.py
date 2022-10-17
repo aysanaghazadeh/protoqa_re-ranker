@@ -5,18 +5,16 @@ import torch
 
 class Roberta(nn.Module):
     def __init__(self, config):
+        super().__init__()
         self.config = config
-        self.tokenizer = RobertaTokenizer.from_pretrained('bert-base')
-        self.model = RobertaForMultipleChoice
-        self.linear = nn.Linear(config.num_choices, config.num_choices)
+        self.tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
+        self.model = RobertaForMultipleChoice.from_pretrained('roberta-base')
+        self.linear = nn.Linear(config.num_choices, 1)
+        self.sigmoid = nn.Sigmoid()
+        self.softmax = nn.Softmax()
 
-
-    def forward(self, question, choices):
-        labels = torch.tensor(0).unsqueeze(0)
-        encoding = self.tokenizer([question] * len(choices), choices, return_tensors="pt", padding=True)
+    def forward(self, encoding):
+        labels = torch.tensor(0).unsqueeze(0).to(device=self.config.device)
         roberta_output = self.model(**{k: v.unsqueeze(0) for k, v in encoding.items()}, labels=labels)
-        linear_output = self.linear(roberta_output['logits'])
-        return nn.Softmax(linear_output)
-
-
-
+        # linear_output = self.linear(roberta_output['logits'])
+        return self.softmax(roberta_output['logits'])
