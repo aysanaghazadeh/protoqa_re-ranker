@@ -17,4 +17,4 @@ class Roberta(nn.Module):
         labels = torch.tensor(0).unsqueeze(0).to(device=self.config.device)
         roberta_output = self.model(**{k: v.unsqueeze(0) for k, v in encoding.items()}, labels=labels)
         # linear_output = self.linear(roberta_output['logits'])
-        return self.softmax(roberta_output['logits'])
+        return roberta_output['logits']
