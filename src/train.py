@@ -20,7 +20,7 @@ class Train(nn.Module):
         optimizer = \
             SGD(model.parameters(), lr=self.config.lr, momentum=self.config.momentum) \
                 if self.config.optimizer == 'sgd' \
-                else Adam(model.parameters(), lr=self.config.lr, momentum=self.config.momentum)
+                else Adam(model.parameters(), lr=self.config.lr)
 
         for epoch in tqdm(range(self.epoch)):
             model.train()
