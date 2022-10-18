@@ -24,12 +24,15 @@ class Train(nn.Module):
 
         for epoch in tqdm(range(self.epoch)):
             model.train()
+            model.double()
             total_loss = 0
             preds = []
             labels = []
             for (i, (question, choices, label)) in enumerate(train_loader):
+
                 encoding = self.tokenizer([question, question], choices, return_tensors="pt", padding=True)
                 encoding, label = encoding.to(device=self.config.device), label.to(device=self.config.device)
+                label = label.to(self.config.device)
                 prediction = model(encoding)
                 preds.append(torch.argmax(prediction.cpu()))
                 labels.append(label)
@@ -39,8 +42,8 @@ class Train(nn.Module):
                 optimizer.step()
                 total_loss += loss
             print("[INFO] EPOCH: {}/{}".format(epoch + 1, self.config.num_epochs))
-            print("Train loss: {:.6f}".format(total_loss/i))
-            print("Train Accuracy: {:.6f}".format(np.sum(np.array(labels) == np.array(preds))/len(preds)))
+            print("Train loss: {}".format(total_loss/i))
+            print("Train Accuracy: {}".format(np.sum(np.array(labels) == np.array(preds))/len(preds)))
             labels = []
             preds = []
             for (i, (question, choices, label)) in enumerate(test_loader):
@@ -49,4 +52,4 @@ class Train(nn.Module):
                 prediction = model(encoding)
                 preds.append(torch.argmax(prediction.cpu()))
                 labels.append(label)
-            print("Test Accuracy: {:.6f}".format(np.sum(np.array(labels) == np.array(preds)) / len(preds)))
+            print("Test Accuracy: {}".format(np.sum(np.array(labels) == np.array(preds)) / len(preds)))
