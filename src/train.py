@@ -34,7 +34,7 @@ class Train(nn.Module):
                 label = label.to(self.config.device)
                 prediction = model(encoding)
                 preds.append(torch.argmax(prediction.cpu()))
-                labels.append(label)
+                labels.append(label.cpu())
                 loss = self.loss(prediction, label)
                 optimizer.zero_grad()
                 loss.backward()
