@@ -1,4 +1,5 @@
 from torch.optim import SGD, Adam
+from torch.optim.lr_scheduler import  StepLR
 from torch.nn import CrossEntropyLoss, HingeEmbeddingLoss
 from torch import nn
 from tqdm import tqdm
@@ -21,7 +22,7 @@ class Train(nn.Module):
             SGD(model.parameters(), lr=self.config.lr, momentum=self.config.momentum) \
                 if self.config.optimizer == 'sgd' \
                 else Adam(model.parameters(), lr=self.config.lr)
-
+        scheduler = StepLR(optimizer, step_size=30, gamma=0.1)
         for epoch in tqdm(range(self.epoch)):
             model.train()
             model.double()
@@ -39,6 +40,7 @@ class Train(nn.Module):
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
+                scheduler.step()
                 total_loss += loss
             print("[INFO] EPOCH: {}/{}".format(epoch + 1, self.config.num_epochs))
             print("Train loss: {}".format(total_loss/i))
