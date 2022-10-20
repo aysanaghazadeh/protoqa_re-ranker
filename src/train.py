@@ -50,5 +50,5 @@ class Train(nn.Module):
                 encoding, label = encoding.to(device=self.config.device), label.to(device=self.config.device)
                 prediction = model(encoding)
                 preds.append(torch.argmax(prediction.cpu()))
-                labels.append(label)
+                labels.append(label.cpu())
             print("Test Accuracy: {}".format(np.sum(np.array(labels) == np.array(preds)) / len(preds)))
