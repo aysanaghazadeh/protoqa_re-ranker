@@ -11,7 +11,7 @@ class Train(nn.Module):
     def __init__(self, config):
         super().__init__()
         self.config = config
-        self.loss = CrossEntropyLoss() if self.config == 'CrossEntropy' else HingeEmbeddingLoss()
+        self.loss = CrossEntropyLoss() if self.config.loss == 'CrossEntropy' else HingeEmbeddingLoss()
         self.tokenizer = RobertaTokenizer.from_pretrained("roberta-base")
         self.results = {"train_loss": [], "test_loss": []}
         self.epoch = self.config.num_epochs
@@ -29,7 +29,6 @@ class Train(nn.Module):
             preds = []
             labels = []
             for (i, (question, choices, label)) in enumerate(train_loader):
-
                 encoding = self.tokenizer([question, question], choices, return_tensors="pt", padding=True)
                 encoding, label = encoding.to(device=self.config.device), label.to(device=self.config.device)
                 label = label.to(self.config.device)
