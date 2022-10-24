@@ -20,7 +20,7 @@ NUM_EPOCHS = 100
 BATCH_SIZE = 1
 NUM_CHOICES = 2
 LOSS = 'CrossEntropy'
-OPTIM = 'Adam'
+OPTIM = 'sgd'
 
 
 def parse_args(arguments=None):

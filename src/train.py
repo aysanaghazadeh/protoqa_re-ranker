@@ -1,5 +1,5 @@
 from torch.optim import SGD, Adam
-from torch.optim.lr_scheduler import  StepLR
+from torch.optim.lr_scheduler import StepLR
 from torch.nn import CrossEntropyLoss, HingeEmbeddingLoss
 from torch import nn
 from tqdm import tqdm
@@ -25,15 +25,16 @@ class Train(nn.Module):
         scheduler = StepLR(optimizer, step_size=30, gamma=0.1)
         for epoch in tqdm(range(self.epoch)):
             model.train()
-            model.double()
             total_loss = 0
             preds = []
             labels = []
             for (i, (question, choices, label)) in enumerate(train_loader):
+                print(label)
                 encoding = self.tokenizer([question, question], choices, return_tensors="pt", padding=True)
                 encoding, label = encoding.to(device=self.config.device), label.to(device=self.config.device)
                 label = label.to(self.config.device)
-                prediction = model(encoding)
+                prediction = model(encoding).double()
+                print(prediction)
                 preds.append(torch.argmax(prediction.cpu()))
                 labels.append(label.cpu())
                 loss = self.loss(prediction, label)

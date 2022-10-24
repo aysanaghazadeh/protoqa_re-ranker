@@ -14,7 +14,6 @@ class Roberta(nn.Module):
         self.softmax = nn.Softmax()
 
     def forward(self, encoding):
-        labels = torch.tensor(0).unsqueeze(0).to(device=self.config.device)
         roberta_output = self.model(**{k: v.unsqueeze(0) for k, v in encoding.items()})
         # linear_output = self.linear(roberta_output['logits'])
         return roberta_output.logits
