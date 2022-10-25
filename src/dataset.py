@@ -1,5 +1,6 @@
 from torch.utils.data import Dataset
 from random import shuffle
+from transformers import RobertaTokenizer
 
 
 class Dataset(Dataset):
@@ -7,6 +8,7 @@ class Dataset(Dataset):
         super().__init__()
         self.answers = data['answers']
         self.questions = data['questions']
+        self.tokenizer = RobertaTokenizer.from_pretrained("roberta-base")
 
     def __len__(self):
         return len(self.answers)
@@ -21,5 +23,7 @@ class Dataset(Dataset):
             label = 0
         else:
             label = 1
+        encoding = self.tokenizer([question, question], choices, return_tensors="pt", padding='max_length',
+                                  truncation=True, max_length=25)
 
-        return question, choices, label
+        return encoding, label

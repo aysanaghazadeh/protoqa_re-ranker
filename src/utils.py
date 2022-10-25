@@ -66,7 +66,7 @@ def load_question_answer_list(config):
 
 def load_data(config):
     answers, questions = load_question_answer_list(config)
-    answers, questions = answers[0:2], questions[0:2]
+    answers, questions = answers[0:100], questions[0:100]
     train_questions, test_questions, train_answers, test_answers = train_test_split(
         questions,
         answers,
@@ -78,6 +78,6 @@ def load_data(config):
     test_set = Dataset(data)
     print(f"[INFO] found {len(train_set)} examples in the training set...")
     print(f"[INFO] found {len(test_set)} examples in the test set...")
-    train_loader = DataLoader(train_set, shuffle=True, batch_size=config.batch_size, num_workers=os.cpu_count())
+    train_loader = DataLoader(train_set, shuffle=False, batch_size=config.batch_size, num_workers=os.cpu_count())
     test_loader = DataLoader(test_set, shuffle=False, batch_size=config.batch_size, num_workers=os.cpu_count())
     return train_loader, test_loader

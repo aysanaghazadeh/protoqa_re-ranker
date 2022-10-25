@@ -13,14 +13,14 @@ PATH_TO_DATASET = '../protoqa-data/data/dev/dev.crowdsourced.jsonl'
 PATH_TO_MODELS = 'models'
 PATH_TO_RESULTS = 'results'
 TEST_SIZE = 0.2
-LEARNING_RATE = 0.1  # try and test
+LEARNING_RATE = 0.01  # try and test
 MOMENTUM = 0.9  # try and test
 DEVICE = get_device()
-NUM_EPOCHS = 100
-BATCH_SIZE = 1
+NUM_EPOCHS = 100000
+BATCH_SIZE = 2
 NUM_CHOICES = 2
 LOSS = 'CrossEntropy'
-OPTIM = 'sgd'
+OPTIM = 'Adam'
 
 
 def parse_args(arguments=None):

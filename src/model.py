@@ -7,13 +7,16 @@ class Roberta(nn.Module):
     def __init__(self, config):
         super().__init__()
         self.config = config
-        self.tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
-        self.model = RobertaForMultipleChoice.from_pretrained('roberta-base')
-        self.linear = nn.Linear(config.num_choices, 1)
-        self.sigmoid = nn.Sigmoid()
+        self.model = RobertaForMultipleChoice.from_pretrained(
+            'roberta-base')
+        self.linear = nn.Linear(2, 2)
         self.softmax = nn.Softmax()
 
     def forward(self, encoding):
         roberta_output = self.model(**{k: v.unsqueeze(0) for k, v in encoding.items()})
-        # linear_output = self.linear(roberta_output['logits'])
-        return roberta_output.logits
+        roberta_output = self.linear(torch.transpose(roberta_output.logits, 0, 1))
+        if self.config.loss == 'CrossEntropy':
+            output = roberta_output
+        else:
+            output = self.softmax(roberta_output)
+        return output
