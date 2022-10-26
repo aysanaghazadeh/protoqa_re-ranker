@@ -9,6 +9,8 @@ class Dataset(Dataset):
         self.answers = data['answers']
         self.questions = data['questions']
         self.tokenizer = RobertaTokenizer.from_pretrained("roberta-base")
+        # for param in self.tokenizer.parameters():
+        #     param.requires_grad = False
 
     def __len__(self):
         return len(self.answers)

@@ -66,7 +66,7 @@ def load_question_answer_list(config):
 
 def load_data(config):
     answers, questions = load_question_answer_list(config)
-    answers, questions = answers[0:100], questions[0:100]
+    answers, questions = answers[0:13], questions[0:13]
     train_questions, test_questions, train_answers, test_answers = train_test_split(
         questions,
         answers,

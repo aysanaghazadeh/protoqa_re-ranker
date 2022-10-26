@@ -14,7 +14,7 @@ class Roberta(nn.Module):
 
     def forward(self, encoding):
         roberta_output = self.model(**{k: v.unsqueeze(0) for k, v in encoding.items()})
-        roberta_output = self.linear(torch.transpose(roberta_output.logits, 0, 1))
+        roberta_output = torch.transpose(roberta_output.logits, 0, 1)
         if self.config.loss == 'CrossEntropy':
             output = roberta_output
         else:

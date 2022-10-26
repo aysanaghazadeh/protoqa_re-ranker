@@ -30,6 +30,7 @@ class Train(nn.Module):
             total_loss = 0
             preds = []
             labels = []
+            requires_grad = True
             for (i, (encoding, label)) in enumerate(train_loader):
                 encoding = {k: v.to(device=self.config.device) for k, v in encoding.items()}
                 label = label.to(self.config.device)
@@ -42,6 +43,10 @@ class Train(nn.Module):
                 preds += predicted_label.cpu()
                 labels += label.cpu()
                 loss = self.loss(prediction, label)
+                if loss == 0 and not(requires_grad):
+                    for param in model.parameters():
+                        param.requires_grad = False
+                        requires_grad = False
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
