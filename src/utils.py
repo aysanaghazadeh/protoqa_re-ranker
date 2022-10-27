@@ -5,6 +5,7 @@ from dataset import Dataset
 import os
 import warnings
 from itertools import product
+from datasets import load_dataset
 
 
 def load_question_answer_list(config):
@@ -71,7 +72,7 @@ def load_data(config):
         questions,
         answers,
         test_size=config.test_size,
-        random_state=7)
+        random_state=0)
     data = {"questions": train_questions, "answers": train_answers}
     train_set = Dataset(data)
     data = {"questions": test_questions, "answers": test_answers}

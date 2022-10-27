@@ -30,11 +30,11 @@ class Train(nn.Module):
             total_loss = 0
             preds = []
             labels = []
-            requires_grad = True
             for (i, (encoding, label)) in enumerate(train_loader):
                 encoding = {k: v.to(device=self.config.device) for k, v in encoding.items()}
                 label = label.to(self.config.device)
-                prediction = model(encoding)
+                prediction, loss = model(encoding, label)
+                optimizer.zero_grad()
                 if self.config.loss == 'CrossEntropy':
                     predicted_label = self.softmax(prediction)
                 else:
@@ -42,18 +42,23 @@ class Train(nn.Module):
                 predicted_label = torch.argmax(predicted_label, dim=1)
                 preds += predicted_label.cpu()
                 labels += label.cpu()
-                loss = self.loss(prediction, label)
-                if loss == 0 and not(requires_grad):
-                    for param in model.parameters():
-                        param.requires_grad = False
-                        requires_grad = False
-                optimizer.zero_grad()
+                for param in model.parameters():
+                    grad = param.grad
                 loss.backward()
+                weights = []
+                for param in model.parameters():
+                    grad = param.grad
+                    weights.append(param.clone())
+
                 optimizer.step()
+                new_weights = []
+                for param in model.parameters():
+                    new_weights.append(param.clone())
+
                 scheduler.step()
                 total_loss += loss
             print("[INFO] EPOCH: {}/{}".format(epoch + 1, self.config.num_epochs))
-            print("Train loss: {}".format(total_loss/self.config.batch_size))
+            print("Train loss: {}".format(total_loss))
             print("Train Accuracy: {}".format(np.sum(np.array(labels) == np.array(preds))/len(preds)))
             # labels = []
             # preds = []
@@ -68,3 +73,4 @@ class Train(nn.Module):
             #     preds += predicted_label.cpu()
             #     labels += label.cpu()
             # print("Test Accuracy: {}".format(np.sum(np.array(labels) == np.array(preds)) / len(preds)))
+
