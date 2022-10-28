@@ -42,23 +42,12 @@ class Train(nn.Module):
                 predicted_label = torch.argmax(predicted_label, dim=1)
                 preds += predicted_label.cpu()
                 labels += label.cpu()
-                for param in model.parameters():
-                    grad = param.grad
                 loss.backward()
-                weights = []
-                for param in model.parameters():
-                    grad = param.grad
-                    weights.append(param.clone())
-
                 optimizer.step()
-                new_weights = []
-                for param in model.parameters():
-                    new_weights.append(param.clone())
-
                 scheduler.step()
                 total_loss += loss
             print("[INFO] EPOCH: {}/{}".format(epoch + 1, self.config.num_epochs))
-            print("Train loss: {}".format(total_loss))
+            print("Train loss: {}".format(total_loss/(len(preds)/self.config.batch_size)))
             print("Train Accuracy: {}".format(np.sum(np.array(labels) == np.array(preds))/len(preds)))
             # labels = []
             # preds = []

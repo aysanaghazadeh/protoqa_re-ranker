@@ -9,7 +9,7 @@ class Dataset(Dataset):
         super().__init__()
         self.answers = data['answers']
         self.questions = data['questions']
-        self.tokenizer = RobertaTokenizer.from_pretrained("LIAMF-USP/roberta-large-finetuned-race")
+        self.tokenizer = RobertaTokenizer.from_pretrained("roberta-base")
 
     def __len__(self):
         return len(self.answers)
